@@ -65816,7 +65816,7 @@ function (_React$Component) {
       var events = this.state.events;
       if (events === null) return null;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_JobsList__WEBPACK_IMPORTED_MODULE_3__["default"], {
-        events: events
+        events: events['jobsfeed']
       }));
     }
   }]);
@@ -65850,6 +65850,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
 /* harmony import */ var _Apidata__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Apidata */ "./resources/js/components/Apidata.js");
+/* harmony import */ var _JobsList__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./JobsList */ "./resources/js/components/JobsList.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -65860,13 +65861,14 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
 
 
 
@@ -65880,32 +65882,105 @@ var Example =
 function (_Component) {
   _inherits(Example, _Component);
 
-  function Example() {
+  function Example(props, context) {
+    var _this;
+
     _classCallCheck(this, Example);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(Example).apply(this, arguments));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Example).call(this, props, context));
+    _this.state = {
+      query: "",
+      // bgColor: "white",
+      searchType: "title",
+      events: null
+    };
+    _this.setQuery = _this.setQuery.bind(_assertThisInitialized(_this));
+    _this.searchJob = _this.searchJob.bind(_assertThisInitialized(_this));
+    _this.setSearchType = _this.setSearchType.bind(_assertThisInitialized(_this));
+    return _this;
   }
 
   _createClass(Example, [{
+    key: "setQuery",
+    value: function setQuery(e) {
+      this.setState({
+        query: e.target.value
+      });
+    }
+  }, {
+    key: "setSearchType",
+    value: function setSearchType(e) {
+      this.setState({
+        searchType: e.target.value
+      });
+    }
+  }, {
+    key: "searchJob",
+    value: function searchJob(e) {
+      var _this2 = this;
+
+      var query = this.state.query;
+      var searchType = this.state.searchType; // this.setState({
+      //   bgColor: this.state.color
+      // });
+
+      axios.get('/jobs/' + searchType + '?query=' + query).then(function (response) {
+        return _this2.setState({
+          events: response.data
+        });
+      }).catch(function (err) {
+        error('Something went wrong');
+        console.warn(err);
+      });
+      e.preventDefault();
+    }
+  }, {
     key: "render",
     value: function render() {
-      var _this = this;
+      // var squareStyle = {
+      //     backgroundColor: this.state.bgColor
+      //   };
+      var events = this.state.events;
 
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "content"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Link"], {
-        to: "/jobs"
-      }, "Jobs"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Input, {
-        type: "text",
-        placeholder: "Insert some text here...",
-        id: "title",
-        callback: function callback(val) {
-          return showApiData(val, _this);
-        }
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
-        path: "/jobs",
-        component: _Apidata__WEBPACK_IMPORTED_MODULE_3__["default"]
-      }));
+      if (events === null) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "content"
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "text-center"
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Link"], {
+          to: "/jobs",
+          className: "btn btn-primary"
+        }, "Show all jobs")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: ""
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+          onSubmit: this.searchJob
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+          name: "searchValue",
+          onChange: this.setSearchType
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+          value: "title"
+        }, "Job Title"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+          value: "companyname"
+        }, "Company Name"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+          value: "location"
+        }, "Location"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+          value: "skills"
+        }, "Skills")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+          onChange: this.setQuery,
+          placeholder: "Enter a value to search"
+        }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+          type: "submit"
+        }, "go")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
+          path: "/jobs",
+          component: _Apidata__WEBPACK_IMPORTED_MODULE_3__["default"]
+        })));
+      } else {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: ""
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_JobsList__WEBPACK_IMPORTED_MODULE_4__["default"], {
+          events: events
+        }));
+      }
     }
   }]);
 
@@ -65939,8 +66014,7 @@ function Input(_ref) {
   });
 }
 
-function showApiData(val, elem) {
-  console.log(elem.id);
+function searchTitle(val) {
   console.log(val);
 }
 
@@ -65995,17 +66069,35 @@ function (_React$Component) {
     key: "renderEvents",
     value: function renderEvents() {
       var events = this.props.events;
-      console.log(events['jobsfeed']);
-      return events['jobsfeed'].map(function (event) {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
-          key: event._id
-        }, event.title, ' - ', event.applylink);
+      console.log(events);
+      console.log(events === null);
+
+      if (events === null || events.length == 0) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "container ml-2"
+        }, "No Jobs Found");
+      }
+
+      return events.map(function (event) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "col-5 mt-2 ml-2 mr-4 mb-2"
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          class: "card"
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          class: "card-header"
+        }, event.title, " ", ' - ', " ", event.companyname), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          class: "card-body"
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, " Link: ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+          href: event.applylink
+        }, event.applylink), " "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, event.jd), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Location: ", event.location), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Experience: ", event.experience), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Skills: ", event.skills))));
       });
     }
   }, {
     key: "render",
     value: function render() {
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, this.renderEvents()));
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "row "
+      }, this.renderEvents()));
     }
   }]);
 
@@ -66013,7 +66105,7 @@ function (_React$Component) {
 }(react__WEBPACK_IMPORTED_MODULE_0___default.a.Component);
 
 JobsList.propTypes = {
-  events: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.arrays)
+  events: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.arrayOf(prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.object)
 };
 JobsList.defaultProps = {
   events: []

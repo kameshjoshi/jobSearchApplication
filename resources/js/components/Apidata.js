@@ -27,7 +27,7 @@ class Apidata extends React.Component {
 
     return (
       <div>
-      	<JobsList events={events}/>
+      	<JobsList events={events['jobsfeed']}/>
       </div>
     );
   }

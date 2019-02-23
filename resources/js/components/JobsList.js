@@ -5,27 +5,47 @@ class JobsList extends React.Component {
 
   renderEvents() {
     const { events } = this.props;
-    console.log(events['jobsfeed']);
-    return events['jobsfeed'].map(event => (
-      <li key={event._id}>
-          {event.title}
-          {' - '}
-          {event.applylink}
-      </li>
+    console.log(events);
+    console.log(events === null);
+    if (events === null || events.length == 0){
+    	return (
+    		<div className="container ml-2">
+    			No Jobs Found
+    		</div>
+    	);
+    }
+
+    return events.map(event => (
+      	<div className='col-5 mt-2 ml-2 mr-4 mb-2'>
+	      	<div class="card">
+			  <div class="card-header">
+			    {event.title} {' - '} {event.companyname}
+			  </div>
+			  <div class="card-body">
+			    <p> Link: <a href={event.applylink}>{event.applylink}</a> </p>
+			    <p>{event.jd}</p>
+			    <p>Location: {event.location}</p>
+			    <p>Experience: {event.experience}</p>
+			    <p>Skills: {event.skills}</p>
+			  </div>
+			</div>
+		</div>
     ));
   }
 
   render() {
     return (
       <div>
-      	<ul>{this.renderEvents()}</ul>
+      	<div className='row '>
+      		{this.renderEvents()}
+      	</div>
       </div>
     );
   }
 }
 
 JobsList.propTypes = {
-  events: PropTypes.arrayOf(PropTypes.arrays)
+  events: PropTypes.arrayOf(PropTypes.object)
 };
 
 JobsList.defaultProps = {
