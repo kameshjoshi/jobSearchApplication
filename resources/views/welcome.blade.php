@@ -8,11 +8,11 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
-        
+
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     </head>
     <body>
-        <h2 style="text-align: center"> Laravel and React application </h2>
+        <h2 style="text-align: center"> Serach jobs </h2>
         <div id="root"></div>
         <script src="{{mix('js/app.js')}}" ></script>
     </body>

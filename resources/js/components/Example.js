@@ -13,14 +13,15 @@ export default class Example extends Component {
 
       this.state = {
         query: "",
-        // bgColor: "white",
         searchType: "title",
-        events: null,
+        sortBy: "",
+        events: null
       };
 
       this.setQuery = this.setQuery.bind(this);
       this.searchJob = this.searchJob.bind(this);
       this.setSearchType = this.setSearchType.bind(this);
+      this.setSortType   = this.setSortType.bind(this);
     }
 
     setQuery(e) {
@@ -35,15 +36,20 @@ export default class Example extends Component {
       });
     }
 
+    setSortType(e){
+      console.log(e.target.value);
+      this.setState({ 
+        sortBy: e.target.value 
+      });
+    }
+
     searchJob(e) {
       var query = this.state.query;
       var searchType = this.state.searchType;
-      // this.setState({
-      //   bgColor: this.state.color
-      // });
+      var sortType = this.state.sortBy;
 
       axios
-      .get('/jobs/'+searchType+'?query='+query)
+      .get('/jobs/'+searchType+'?query='+query+'&sort_by='+sortType)
       .then(response => this.setState({ events: response.data }))
       .catch((err) => {
         error('Something went wrong');
@@ -54,11 +60,7 @@ export default class Example extends Component {
     }
 
     render() {
-      // var squareStyle = {
-      //     backgroundColor: this.state.bgColor
-      //   };
-
-      const { events } = this.state;
+      const {events,searchType,query} = this.state;
       if (events === null){
         return (
             <div className='content'>
@@ -66,19 +68,32 @@ export default class Example extends Component {
                   <Link to="/jobs" className="btn btn-primary" >Show all jobs</Link>
                 </div>
 
-                <div className="">
-                  <div></div>
-       
+                <div className="text-center mt-2">       
                   <form onSubmit={this.searchJob}>
-
-                    <select name="searchValue" onChange={this.setSearchType} >
+                    <label htmlFor="searchValue" className="mr-2">Search: </label>
+                    <select name="searchValue" onChange={this.setSearchType}>
                       <option value="title">Job Title</option>
                       <option value="companyname">Company Name</option>
                       <option value="location">Location</option>
-                      <option value="skills">Skills</option>
+                      <option value="source">Source</option>
+                      <option value="salary">Salary</option>
+                      <option value="type">Type</option>
+                      <option value="experience">Experience</option>
+                      <option value="startdate">Start Date</option>
+                      <option value="enddate">End Date</option>
                     </select>
 
+
                     <input onChange={this.setQuery} placeholder="Enter a value to search"></input>
+
+                    <label htmlFor="sortValue" className="ml-2 mr-2"> sort by: </label>
+
+                    <select name="sortValue" onChange={this.setSortType} >
+                      <option value=""></option>
+                      <option value="location">Location</option>
+                      <option value="type">Type</option>
+                    </select>
+
                     <button type="submit">go</button>
                   </form>
 
@@ -90,28 +105,11 @@ export default class Example extends Component {
       else
       {
         return (
-          <div className="">
+          <div className="ml-2">
+            <p>Search result for {searchType} with query {query}</p>
             <JobsList events={events}/>
           </div>
         );
       }
     }
 }
-
-function Input ({ callback, type = 'text', disabled = false, readOnly = false, placeholder = '',id = '' }) {
-  return (
-    <input
-      id={id}
-      type={type}
-      disabled={disabled}
-      readOnly={readOnly}
-      placeholder={placeholder}
-      onChange={({ target: { value } }) => callback(value)}
-    />
-  );
-}
-
-function searchTitle(val){
-  console.log(val);
-}
-

@@ -14,8 +14,16 @@ class JobsController extends Controller
     }
 
     #Sample testing url is like
-    # http://localhost:8000/jobs/location?sort_by=location&sort=asc&query=Bangalore
-    
+    # http://localhost:8000/jobs/title?query=dfx => Job Title
+    # http://localhost:8000/jobs/companyname?query=Onco => Company name
+    # http://localhost:8000/jobs/location?query=Bengaluru => location
+    # http://localhost:8000/jobs/skills?query=css => Skills
+    # http://localhost:8000/jobs/source?query=techgig => source
+    # http://localhost:8000/jobs/salary?query=10000 => salary
+    # http://localhost:8000/jobs/type?query=intern => type
+    # http://localhost:8000/jobs/experience?query=8 => experience
+    # http://localhost:8000/jobs/startdate?query=2018-07-14 => startdate
+
     public function search($serch_by, Request $request)
     {  
 
@@ -56,11 +64,13 @@ class JobsController extends Controller
 
         $jsonReturnArray = array();
 
-        foreach($toSearchData->jobsfeed as $item)
-        {
-          if (strpos(strtolower($item->$serch_by),strtolower($query)) !== false)
+        if ($query){
+          foreach($toSearchData->jobsfeed as $item)
           {
-            array_push($jsonReturnArray, $item);
+            if (strpos(strtolower($item->$serch_by),strtolower($query)) !== false)
+            {
+              array_push($jsonReturnArray, $item);
+            }
           }
         }
 
@@ -68,30 +78,39 @@ class JobsController extends Controller
         {
           if($sort_by == 'location')
           {
-           $jsonReturnArray = $this->sort_data_by_location($jsonReturnArray,$sort_by);
+           $jsonReturnArray = $this->sort_data_by_location($jsonReturnArray,$sort_by,$sort);
           }else{
-           $jsonReturnArray = $this->sort_data_by_type($jsonReturnArray,$sort_by);
+           $jsonReturnArray = $this->sort_data_by_type($jsonReturnArray,$sort_by,$sort);
           }
         }
 
         return $jsonReturnArray;
     }
     
-     #This logic is redundent 
-     private function sort_data_by_location($jsonReturnArray,$sort_by) {
-
-        usort($jsonReturnArray, function($a, $b) {
-          return $a->location > $b->location ? -1 : 1;
-        });
-
+     # This logic is redundent, needs to be improved
+     private function sort_data_by_location($jsonReturnArray,$sort_by,$sort) {
+        if($sort == 'asc'){
+          usort($jsonReturnArray, function($a, $b) {
+            return $a->location > $b->location ? -1 : 1;
+          });
+        }else{
+          usort($jsonReturnArray, function($a, $b) {
+            return $a->location > $b->location ? 1 : -1;
+          });
+        }
         return $jsonReturnArray;
     }
 
-    private function sort_data_by_type($jsonReturnArray,$sort_by) {
-
-        usort($jsonReturnArray, function($a, $b) {
-          return $a->location > $b->location ? 1 : -1;
-        });
+    private function sort_data_by_type($jsonReturnArray,$sort_by,$sort) {
+        if($sort == 'asc'){
+          usort($jsonReturnArray, function($a, $b) {
+            return $a->type > $b->type ? -1 : 1;
+          });
+        }else{
+          usort($jsonReturnArray, function($a, $b) {
+            return $a->type > $b->type ? 1 : -1;
+          });
+        }
 
         return $jsonReturnArray;
     }

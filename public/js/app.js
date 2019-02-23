@@ -65890,13 +65890,14 @@ function (_Component) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Example).call(this, props, context));
     _this.state = {
       query: "",
-      // bgColor: "white",
       searchType: "title",
+      sortBy: "",
       events: null
     };
     _this.setQuery = _this.setQuery.bind(_assertThisInitialized(_this));
     _this.searchJob = _this.searchJob.bind(_assertThisInitialized(_this));
     _this.setSearchType = _this.setSearchType.bind(_assertThisInitialized(_this));
+    _this.setSortType = _this.setSortType.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -65915,16 +65916,22 @@ function (_Component) {
       });
     }
   }, {
+    key: "setSortType",
+    value: function setSortType(e) {
+      console.log(e.target.value);
+      this.setState({
+        sortBy: e.target.value
+      });
+    }
+  }, {
     key: "searchJob",
     value: function searchJob(e) {
       var _this2 = this;
 
       var query = this.state.query;
-      var searchType = this.state.searchType; // this.setState({
-      //   bgColor: this.state.color
-      // });
-
-      axios.get('/jobs/' + searchType + '?query=' + query).then(function (response) {
+      var searchType = this.state.searchType;
+      var sortType = this.state.sortBy;
+      axios.get('/jobs/' + searchType + '?query=' + query + '&sort_by=' + sortType).then(function (response) {
         return _this2.setState({
           events: response.data
         });
@@ -65937,10 +65944,10 @@ function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      // var squareStyle = {
-      //     backgroundColor: this.state.bgColor
-      //   };
-      var events = this.state.events;
+      var _this$state = this.state,
+          events = _this$state.events,
+          searchType = _this$state.searchType,
+          query = _this$state.query;
 
       if (events === null) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -65951,10 +65958,13 @@ function (_Component) {
           to: "/jobs",
           className: "btn btn-primary"
         }, "Show all jobs")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          className: ""
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+          className: "text-center mt-2"
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
           onSubmit: this.searchJob
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+          htmlFor: "searchValue",
+          className: "mr-2"
+        }, "Search: "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
           name: "searchValue",
           onChange: this.setSearchType
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
@@ -65964,11 +65974,33 @@ function (_Component) {
         }, "Company Name"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
           value: "location"
         }, "Location"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
-          value: "skills"
-        }, "Skills")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+          value: "source"
+        }, "Source"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+          value: "salary"
+        }, "Salary"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+          value: "type"
+        }, "Type"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+          value: "experience"
+        }, "Experience"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+          value: "startdate"
+        }, "Start Date"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+          value: "enddate"
+        }, "End Date")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
           onChange: this.setQuery,
           placeholder: "Enter a value to search"
-        }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+          htmlFor: "sortValue",
+          className: "ml-2 mr-2"
+        }, " sort by: "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+          name: "sortValue",
+          onChange: this.setSortType
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+          value: ""
+        }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+          value: "location"
+        }, "Location"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+          value: "type"
+        }, "Type")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
           type: "submit"
         }, "go")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
           path: "/jobs",
@@ -65976,8 +66008,8 @@ function (_Component) {
         })));
       } else {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          className: ""
-        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_JobsList__WEBPACK_IMPORTED_MODULE_4__["default"], {
+          className: "ml-2"
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Search result for ", searchType, " with query ", query), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_JobsList__WEBPACK_IMPORTED_MODULE_4__["default"], {
           events: events
         }));
       }
@@ -65988,35 +66020,6 @@ function (_Component) {
 }(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
 
-
-function Input(_ref) {
-  var callback = _ref.callback,
-      _ref$type = _ref.type,
-      type = _ref$type === void 0 ? 'text' : _ref$type,
-      _ref$disabled = _ref.disabled,
-      disabled = _ref$disabled === void 0 ? false : _ref$disabled,
-      _ref$readOnly = _ref.readOnly,
-      readOnly = _ref$readOnly === void 0 ? false : _ref$readOnly,
-      _ref$placeholder = _ref.placeholder,
-      placeholder = _ref$placeholder === void 0 ? '' : _ref$placeholder,
-      _ref$id = _ref.id,
-      id = _ref$id === void 0 ? '' : _ref$id;
-  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-    id: id,
-    type: type,
-    disabled: disabled,
-    readOnly: readOnly,
-    placeholder: placeholder,
-    onChange: function onChange(_ref2) {
-      var value = _ref2.target.value;
-      return callback(value);
-    }
-  });
-}
-
-function searchTitle(val) {
-  console.log(val);
-}
 
 /***/ }),
 
@@ -66080,13 +66083,14 @@ function (_React$Component) {
 
       return events.map(function (event) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          key: event._id,
           className: "col-5 mt-2 ml-2 mr-4 mb-2"
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          class: "card"
+          className: "card"
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          class: "card-header"
+          className: "card-header"
         }, event.title, " ", ' - ', " ", event.companyname), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          class: "card-body"
+          className: "card-body"
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, " Link: ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
           href: event.applylink
         }, event.applylink), " "), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, event.jd), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Location: ", event.location), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Experience: ", event.experience), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Skills: ", event.skills))));
