@@ -93,6 +93,34 @@ class ExampleTest extends TestCase
         ->assertJson([]);
     }
 
+    public function testSearchMethodSortedWithLocation()
+    {
+        $response = $this->get('/jobs/title?query=dfx&sort_by=location');
+        $response->assertStatus(201);
+    }
+
+    public function testSearchMethodSortedWithType()
+    {
+        $response = $this->get('/jobs/title?query=dfx&sort_by=type');
+        $response->assertStatus(201);
+    }
+
+    public function testSearchMethodSortedWithLocationCheckValuesAreSorted()
+    {
+        $response = $this->get('/jobs/type?query=intern&sort_by=location');
+        $content = $response->decodeResponseJson();
+        self::assertTrue(true,$this->check_json_resoponse_check_values_are_sorted($content,'location'));
+        $response->assertStatus(201);
+    }
+
+    public function testSearchMethodSortedWithTypeCheckValuesAreSorted()
+    {
+        $response = $this->get('/jobs/type?query=intern&sort_by=type');
+        $content = $response->decodeResponseJson();
+        self::assertTrue(true,$this->check_json_resoponse_check_values_are_sorted($content,'type'));
+        $response->assertStatus(201);
+    }
+
     private function check_json_resoponse_contains_search_query($content,$seachValue,$query)
     {	
     	foreach ($content as $key => $jsons) { 
@@ -100,6 +128,23 @@ class ExampleTest extends TestCase
     			return false;
     		}
 		}
+        return true;
+    }
+
+    private function check_json_resoponse_check_values_are_sorted($content,$seachValue)
+    {	
+    	$arrayToCheck = array();
+
+    	foreach ($content as $key => $jsons) { 
+    		array_push($arrayToCheck, $jsons[$seachValue]);
+		}
+
+		$sorted = array_values($arrayToCheck);
+		sort($sorted);
+		if ( $arrayToCheck !== $sorted ) {
+		  return false;
+		}
+
         return true;
     }
 }
